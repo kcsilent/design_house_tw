@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>台灣室內設計 KOL 追蹤平台</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:       #0E0F11;
+  --bg2:      #16181C;
+  --bg3:      #1E2128;
+  --line:     rgba(255,255,255,0.07);
+  --line2:    rgba(255,255,255,0.12);
+  --text:     #E8E6E1;
+  --text2:    #9A9690;
+  --text3:    #5A5753;
+  --accent:   #4AE3A4;
+  --accent2:  #1A6647;
+  --amber:    #F0C060;
+  --coral:    #E8705A;
+  --blue:     #6098E8;
+  --purple:   #A080E8;
+  --mono:     'IBM Plex Mono', monospace;
+  --sans:     'Noto Sans TC', sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ── HEADER ── */
+header {
+  border-bottom: 1px solid var(--line);
+  padding: 0 32px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  background: rgba(14,15,17,0.92);
+  backdrop-filter: blur(16px);
+  z-index: 100;
+}
+
+.logo {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--accent);
+  letter-spacing: 0.06em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.logo::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.header-meta {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text3);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.last-updated {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.last-updated::before {
+  content: '↻';
+  color: var(--accent);
+}
+
+/* ── HERO STATS ── */
+.hero {
+  padding: 40px 32px 32px;
+  border-bottom: 1px solid var(--line);
+}
+
+.hero-title {
+  font-size: 11px;
+  font-family: var(--mono);
+  color: var(--text3);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  margin-bottom: 24px;
+}
+
+.stat-box {
+  background: var(--bg);
+  padding: 20px 20px 16px;
+}
+
+.stat-num {
+  font-family: var(--mono);
+  font-size: 28px;
+  font-weight: 500;
+  color: var(--accent);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.stat-label {
+  font-size: 11px;
+  color: var(--text3);
+  letter-spacing: 0.04em;
+}
+
+/* ── CONTROLS ── */
+.controls {
+  padding: 0 32px;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  gap: 0;
+  overflow-x: auto;
+}
+
+.filter-section {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  border-right: 1px solid var(--line);
+  padding: 0 16px 0 0;
+  margin-right: 16px;
+}
+
+.filter-section:last-child {
+  border-right: none;
+}
+
+.filter-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text3);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-right: 10px;
+  white-space: nowrap;
+}
+
+.cat-btn {
+  height: 44px;
+  padding: 0 14px;
+  background: transparent;
+  border: none;
+  color: var(--text2);
+  font-family: var(--sans);
+  font-size: 13px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.cat-btn:hover { color: var(--text); }
+.cat-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+.sort-select {
+  height: 44px;
+  padding: 0 12px;
+  background: transparent;
+  border: none;
+  color: var(--text2);
+  font-family: var(--mono);
+  font-size: 12px;
+  cursor: pointer;
+  outline: none;
+}
+
+.search-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  padding: 8px 0;
+}
+
+.search-input {
+  background: var(--bg2);
+  border: 1px solid var(--line2);
+  border-radius: 4px;
+  padding: 6px 12px;
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 13px;
+  width: 200px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.search-input:focus { border-color: var(--accent); }
+.search-input::placeholder { color: var(--text3); }
+
+/* ── TABLE ── */
+.table-wrap {
+  padding: 24px 32px;
+}
+
+.count-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text3);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead th {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--text3);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 10px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--line2);
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+}
+
+thead th:hover { color: var(--text2); }
+thead th.sorted { color: var(--accent); }
+thead th.sorted::after { content: ' ↓'; }
+thead th.sorted.asc::after { content: ' ↑'; }
+
+tbody tr {
+  border-bottom: 1px solid var(--line);
+  transition: background 0.1s;
+  cursor: pointer;
+}
+
+tbody tr:hover { background: var(--bg2); }
+tbody tr.hidden { display: none; }
+
+td {
+  padding: 12px 12px;
+  vertical-align: middle;
+}
+
+/* col widths */
+.col-rank  { width: 44px; }
+.col-acct  { width: 220px; }
+.col-cat   { width: 120px; }
+.col-type  { width: 100px; }
+.col-fans  { width: 100px; }
+.col-posts { width: 80px; }
+.col-er    { width: 80px; }
+.col-freq  { width: 100px; }
+.col-site  { width: 80px; }
+.col-pri   { width: 80px; }
+
+.rank-num {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text3);
+}
+
+.acct-block {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--bg3);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text3);
+  border: 1px solid var(--line2);
+  overflow: hidden;
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.acct-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+
+.acct-handle {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text3);
+}
+
+.acct-handle a {
+  color: var(--text3);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.acct-handle a:hover { color: var(--accent); }
+
+/* category badge */
+.cat-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 3px 8px;
+  border-radius: 3px;
+  white-space: nowrap;
+}
+
+.cat-統包工程  { background: rgba(74,227,164,0.12); color: var(--accent); }
+.cat-設計媒體  { background: rgba(96,152,232,0.12); color: var(--blue); }
+.cat-室內設計  { background: rgba(160,128,232,0.12); color: var(--purple); }
+.cat-居家佈置  { background: rgba(240,192,96,0.12);  color: var(--amber); }
+.cat-空間攝影  { background: rgba(232,112,90,0.12);  color: var(--coral); }
+.cat-軟裝設計  { background: rgba(74,227,164,0.08);  color: #5EC8A0; }
+.cat-個人IP   { background: rgba(240,192,96,0.08);  color: #D4A855; }
+
+/* type badge */
+.type-badge {
+  font-family: var(--mono);
+  font-size: 10px;
+  padding: 2px 7px;
+  border-radius: 2px;
+  border: 1px solid;
+  white-space: nowrap;
+}
+
+.type-個人 { border-color: var(--accent2); color: var(--accent); }
+.type-公司 { border-color: #444; color: var(--text3); }
+
+/* fans */
+.fans-num {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.fans-bar-wrap {
+  width: 60px;
+  height: 3px;
+  background: var(--bg3);
+  border-radius: 2px;
+  margin-top: 4px;
+  overflow: hidden;
+}
+
+.fans-bar {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 2px;
+  opacity: 0.5;
+}
+
+/* engagement rate */
+.er-num {
+  font-family: var(--mono);
+  font-size: 13px;
+}
+
+.er-high { color: var(--accent); }
+.er-mid  { color: var(--amber); }
+.er-low  { color: var(--text3); }
+
+/* post frequency */
+.freq-chip {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text2);
+}
+
+.freq-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+
+.freq-active   { background: var(--accent); }
+.freq-moderate { background: var(--amber); }
+.freq-low      { background: var(--coral); }
+
+/* website */
+.site-yes { color: var(--accent); font-family: var(--mono); font-size: 11px; }
+.site-no  { color: var(--text3);  font-family: var(--mono); font-size: 11px; }
+
+/* priority */
+.pri-badge {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  padding: 3px 8px;
+  border-radius: 2px;
+}
+
+.pri-1 { background: rgba(74,227,164,0.15); color: var(--accent); }
+.pri-2 { background: rgba(240,192,96,0.12); color: var(--amber); }
+.pri-3 { background: rgba(90,87,83,0.3);    color: var(--text3); }
+
+/* ── DETAIL PANEL ── */
+#detail-panel {
+  display: none;
+  position: fixed;
+  right: 0;
+  top: 52px;
+  bottom: 0;
+  width: 380px;
+  background: var(--bg2);
+  border-left: 1px solid var(--line2);
+  overflow-y: auto;
+  z-index: 50;
+  padding: 24px;
+}
+
+#detail-panel.open { display: block; }
+
+.panel-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: var(--bg3);
+  border: 1px solid var(--line2);
+  color: var(--text2);
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+}
+
+.panel-close:hover { color: var(--text); }
+
+.panel-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--bg3);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--mono);
+  font-size: 20px;
+  color: var(--text3);
+  border: 1px solid var(--line2);
+  overflow: hidden;
+}
+
+.panel-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+.panel-name {
+  font-size: 17px;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.panel-handle {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+
+.panel-handle a { color: inherit; text-decoration: none; }
+
+.panel-bio {
+  font-size: 13px;
+  color: var(--text2);
+  line-height: 1.6;
+  padding: 12px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 16px;
+}
+
+.panel-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.ps-box {
+  background: var(--bg3);
+  padding: 12px;
+  border-radius: 4px;
+}
+
+.ps-val {
+  font-family: var(--mono);
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 3px;
+}
+
+.ps-key {
+  font-size: 11px;
+  color: var(--text3);
+  letter-spacing: 0.04em;
+}
+
+.panel-section-title {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text3);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  margin-top: 16px;
+}
+
+.panel-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.panel-tag {
+  font-size: 11px;
+  padding: 3px 8px;
+  background: var(--bg3);
+  border: 1px solid var(--line2);
+  border-radius: 3px;
+  color: var(--text2);
+}
+
+.pitch-box {
+  background: var(--bg);
+  border: 1px solid var(--line2);
+  border-left: 3px solid var(--accent);
+  padding: 12px 14px;
+  font-size: 13px;
+  color: var(--text2);
+  line-height: 1.65;
+  border-radius: 0 4px 4px 0;
+}
+
+.outreach-btn {
+  display: block;
+  width: 100%;
+  margin-top: 16px;
+  padding: 11px;
+  background: transparent;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+
+.outreach-btn:hover { background: rgba(74,227,164,0.08); }
+
+/* ── LOADING / EMPTY ── */
+.loading-row td {
+  text-align: center;
+  padding: 60px 0;
+  color: var(--text3);
+  font-family: var(--mono);
+  font-size: 12px;
+}
+
+.data-note {
+  margin: 0 32px 32px;
+  padding: 14px 16px;
+  background: rgba(74,227,164,0.05);
+  border: 1px solid rgba(74,227,164,0.15);
+  border-radius: 4px;
+  font-size: 12px;
+  color: var(--text3);
+  line-height: 1.6;
+}
+
+.data-note strong { color: var(--accent); }
+
+/* ── N8N GUIDE ── */
+.guide-section {
+  margin: 0 32px 40px;
+  border: 1px solid var(--line2);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.guide-header {
+  padding: 14px 20px;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.guide-title {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text2);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.guide-title::before {
+  content: '⚙';
+  color: var(--accent);
+}
+
+.guide-toggle {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text3);
+}
+
+.guide-body {
+  display: none;
+  padding: 20px;
+  background: var(--bg);
+}
+
+.guide-body.open { display: block; }
+
+.guide-step {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 18px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--line);
+}
+
+.guide-step:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+
+.guide-step-num {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--accent);
+  width: 20px;
+  flex-shrink: 0;
+  padding-top: 1px;
+}
+
+.guide-step-content {}
+.guide-step-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.guide-step-desc {
+  font-size: 12px;
+  color: var(--text3);
+  line-height: 1.6;
+}
+
+.code-chip {
+  font-family: var(--mono);
+  font-size: 11px;
+  background: var(--bg3);
+  border: 1px solid var(--line2);
+  padding: 2px 6px;
+  border-radius: 3px;
+  color: var(--accent);
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .col-posts, .col-freq, .col-site { display: none; }
+  #detail-panel { width: 100%; border-left: none; border-top: 1px solid var(--line2); top: auto; bottom: 0; height: 70vh; }
+  .stats-row { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 600px) {
+  header { padding: 0 16px; }
+  .hero, .table-wrap, .data-note, .guide-section { padding-left: 16px; padding-right: 16px; }
+  .controls { padding: 0 16px; }
+  .stats-row { grid-template-columns: repeat(2, 1fr); }
+  .col-er, .col-pri { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">台灣室內設計 KOL 平台</div>
+  <div class="header-meta">
+    <span class="last-updated" id="lastUpdated">載入中...</span>
+    <span id="headerCount" style="color:var(--text3)">— 位創作者</span>
+  </div>
+</header>
+
+<!-- HERO STATS -->
+<section class="hero">
+  <div class="hero-title">資料庫概覽</div>
+  <div class="stats-row">
+    <div class="stat-box">
+      <div class="stat-num" id="stat-total">—</div>
+      <div class="stat-label">總創作者數</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num" id="stat-active">—</div>
+      <div class="stat-label">近三個月活躍</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num" id="stat-nosite">—</div>
+      <div class="stat-label">無自架站（目標對象）</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num" id="stat-avg-er">—</div>
+      <div class="stat-label">平均互動率</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num" id="stat-pri1">—</div>
+      <div class="stat-label">優先邀約（P1）</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTROLS -->
+<div class="controls">
+  <div class="filter-section">
+    <span class="filter-label">分類</span>
+    <button class="cat-btn active" data-cat="全部">全部</button>
+    <button class="cat-btn" data-cat="統包工程">統包工程</button>
+    <button class="cat-btn" data-cat="設計媒體">設計媒體</button>
+    <button class="cat-btn" data-cat="室內設計">室內設計</button>
+    <button class="cat-btn" data-cat="居家佈置">居家佈置</button>
+    <button class="cat-btn" data-cat="空間攝影">空間攝影</button>
+    <button class="cat-btn" data-cat="軟裝設計">軟裝設計</button>
+    <button class="cat-btn" data-cat="個人IP">個人IP</button>
+  </div>
+  <div class="filter-section">
+    <span class="filter-label">類型</span>
+    <button class="cat-btn active" data-type="全部">全部</button>
+    <button class="cat-btn" data-type="個人">個人</button>
+    <button class="cat-btn" data-type="公司">公司</button>
+  </div>
+  <div class="filter-section">
+    <span class="filter-label">排序</span>
+    <select class="sort-select" id="sortSelect">
+      <option value="followers_desc">粉絲數↓</option>
+      <option value="followers_asc">粉絲數↑</option>
+      <option value="er_desc">互動率↓</option>
+      <option value="priority_asc">優先等級</option>
+    </select>
+  </div>
+  <div class="search-wrap">
+    <input class="search-input" type="text" id="searchInput" placeholder="搜尋帳號名稱…">
+  </div>
+</div>
+
+<!-- TABLE -->
+<div class="table-wrap">
+  <div class="count-label">
+    <span id="countLabel">載入中...</span>
+    <span id="dataSource" style="color:var(--text3);font-size:11px;font-family:var(--mono)">資料來源：Apify Instagram Scraper → n8n</span>
+  </div>
+  <table id="kolTable">
+    <thead>
+      <tr>
+        <th class="col-rank">#</th>
+        <th class="col-acct">創作者</th>
+        <th class="col-cat">分類</th>
+        <th class="col-type">帳號類型</th>
+        <th class="col-fans sorted" data-sort="followers">粉絲數</th>
+        <th class="col-posts" data-sort="posts">貼文數</th>
+        <th class="col-er" data-sort="er">互動率</th>
+        <th class="col-freq">發文頻率</th>
+        <th class="col-site">自架站</th>
+        <th class="col-pri" data-sort="priority">優先</th>
+      </tr>
+    </thead>
+    <tbody id="tableBody">
+      <tr class="loading-row"><td colspan="10">⟳ 載入資料中...</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- DATA NOTE -->
+<div class="data-note">
+  <strong>資料說明：</strong>
+  粉絲數與貼文數由 <strong>Apify instagram-profile-scraper</strong> 每週自動抓取，互動率為近 12 篇貼文平均（按讚+留言）/粉絲數估算。
+  發文頻率依據近 90 天貼文數計算：高頻 ≥ 12 篇/月、中頻 4–11 篇/月、低頻 &lt; 4 篇/月。
+  優先等級：P1 = 無自架站 + 粉絲 &gt; 3 萬 + 近期活躍，P2 = 粉絲 1–3 萬或有站，P3 = 其他。
+  帳號來源：以 Instagram hashtag 搜尋 #室內設計 #裝潢知識 #統包 #裝修 #老屋翻新 #居家佈置 等為主。
+</div>
+
+<!-- N8N SETUP GUIDE -->
+<div class="guide-section">
+  <div class="guide-header" onclick="toggleGuide()">
+    <div class="guide-title">n8n 自動更新設定指南</div>
+    <div class="guide-toggle" id="guideToggle">展開 ▾</div>
+  </div>
+  <div class="guide-body" id="guideBody">
+    <div class="guide-step">
+      <div class="guide-step-num">01</div>
+      <div class="guide-step-content">
+        <div class="guide-step-title">準備 Apify 帳號與 API Token</div>
+        <div class="guide-step-desc">
+          至 <a href="https://apify.com" target="_blank" style="color:var(--accent)">apify.com</a> 註冊，進入 Settings → API → 複製 Personal API Token。
+          建議使用 Actor：<span class="code-chip">apify/instagram-profile-scraper</span>，
+          支援一次輸入最多 100 個帳號，自動回傳 followers、posts、bio、external_url 等欄位。
+          每次執行約消耗 $0.002–$0.005 USD/帳號。
+        </div>
+      </div>
+    </div>
+    <div class="guide-step">
+      <div class="guide-step-num">02</div>
+      <div class="guide-step-content">
+        <div class="guide-step-title">建立 Google Sheet 作為帳號主表</div>
+        <div class="guide-step-desc">
+          欄位設計：<span class="code-chip">username</span> <span class="code-chip">display_name</span> <span class="code-chip">category</span> <span class="code-chip">account_type</span> <span class="code-chip">active</span>
+          — 手動維護這份主表（新增/移除帳號、設定分類），n8n 每週從這裡讀取帳號清單，再去 Apify 拉最新數據。
+          這樣的設計讓你可以快速新增帳號而不需要修改 workflow。
+        </div>
+      </div>
+    </div>
+    <div class="guide-step">
+      <div class="guide-step-num">03</div>
+      <div class="guide-step-content">
+        <div class="guide-step-title">n8n Workflow 架構（每週一自動執行）</div>
+        <div class="guide-step-desc">
+          Schedule Trigger（每週一 09:00）→ Google Sheet 讀取帳號清單 →
+          Apify HTTP Request（批次抓取 profile 數據）→ Wait 60s →
+          Apify GET 結果 → Code Node（計算互動率、發文頻率、優先等級）→
+          Google Sheet 寫入 data tab →
+          Code Node（生成 JSON）→ GitHub / Google Drive 儲存 data.json →
+          完成（HTML 平台從 data.json 讀取）
+        </div>
+      </div>
+    </div>
+    <div class="guide-step">
+      <div class="guide-step-num">04</div>
+      <div class="guide-step-content">
+        <div class="guide-step-title">互動率計算邏輯（Code Node）</div>
+        <div class="guide-step-desc">
+          Apify 的 instagram-profile-scraper 不直接回傳互動率，需使用 instagram-post-scraper 抓近 12 篇貼文的按讚+留言數，再除以粉絲數。
+          公式：<span class="code-chip">ER = (avgLikes + avgComments) / followers × 100</span>
+          建議 ER &gt; 5% 標為「高」、2–5% 為「中」、&lt; 2% 為「低」。
+          若不想抓貼文資料，可先以粉絲數估算（微網紅通常 ER 較高）。
+        </div>
+      </div>
+    </div>
+    <div class="guide-step">
+      <div class="guide-step-num">05</div>
+      <div class="guide-step-content">
+        <div class="guide-step-title">HTML 平台更新方式</div>
+        <div class="guide-step-desc">
+          n8n 最後一步將 JSON 存入 <span class="code-chip">GitHub Repo / Google Drive</span>，
+          HTML 平台透過 <span class="code-chip">fetch('data.json')</span> 讀取。
+          如果放在本地端，把 n8n 輸出的 JSON 直接嵌入 HTML 的 <span class="code-chip">window.KOL_DATA</span> 變數即可，
+          不需要額外的伺服器。
+          建議部署到 GitHub Pages 或 Cloudflare Pages（免費），讓整個團隊都能看到。
+        </div>
+      </div>
+    </div>
+    <div class="guide-step">
+      <div class="guide-step-num">06</div>
+      <div class="guide-step-content">
+        <div class="guide-step-title">Workflow JSON 檔案</div>
+        <div class="guide-step-desc">
+          完整可匯入的 n8n workflow JSON 已在下方獨立輸出。
+          匯入方式：n8n → 右上角 ⋯ → Import from file → 選擇 <span class="code-chip">n8n_kol_workflow.json</span>。
+          匯入後替換 <span class="code-chip">YOUR_APIFY_TOKEN</span>、<span class="code-chip">YOUR_GOOGLE_SHEET_ID</span> 即可使用。
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DETAIL PANEL -->
+<div id="detail-panel">
+  <div class="panel-close" onclick="closePanel()">×</div>
+  <div class="panel-avatar" id="panelAvatar">?</div>
+  <div class="panel-name" id="panelName"></div>
+  <div class="panel-handle" id="panelHandle"></div>
+  <div class="panel-bio" id="panelBio"></div>
+  <div class="panel-stats" id="panelStats"></div>
+  <div class="panel-section-title">內容標籤</div>
+  <div class="panel-tags" id="panelTags"></div>
+  <div class="panel-section-title">邀約話術切角</div>
+  <div class="pitch-box" id="panelPitch"></div>
+  <a class="outreach-btn" id="panelIGLink" href="#" target="_blank">→ 開啟 Instagram 頁面</a>
+</div>
+
+<script>
+// ══════════════════════════════════════════
+// DEMO DATA — 正式使用時由 n8n 每週更新此處
+// ══════════════════════════════════════════
+window.KOL_DATA = {
+  lastUpdated: "2026-06-04",
+  creators: [
+    // 統包工程
+    { id:1,  username:"mr.turnkey",       name:"統包先生",         cat:"統包工程", type:"個人", followers:80000,  posts:865,  er:6.2, freq:"高頻", hasSite:false, priority:1, bio:"最專業的統包團隊，有裝修需求請填表單。服務範圍：雙北基隆桃園台中", tags:["裝修避坑","老屋翻新","統包接案","驗收教學"], pitch:"你的3支高互動影片在Google每月共有約1.8萬次搜尋，但這些業主找不到你——我們讓他們找到你。" },
+    { id:2,  username:"renovation_pro_tw",name:"裝修師傅小陳",     cat:"統包工程", type:"個人", followers:45000,  posts:320,  er:7.1, freq:"高頻", hasSite:false, priority:1, bio:"20年裝修經驗，專攻衛浴廚房翻新，分享工班知識避坑指南", tags:["衛浴翻新","廚房裝修","師傅視角","工法教學"], pitch:"你的衛浴翻新系列在Google搜尋量很高，但你在搜尋結果完全隱形——我們幫你解決這個問題。" },
+    { id:3,  username:"house_turnkey_tw", name:"台灣統包工程",     cat:"統包工程", type:"公司", followers:38000,  posts:410,  er:4.8, freq:"高頻", hasSite:true,  priority:2, bio:"一站式室內裝修統包服務，雙北地區，免費丈量", tags:["統包工程","免費丈量","一站式服務"], pitch:"" },
+    { id:4,  username:"oldhouse_revival", name:"老屋復活計畫",     cat:"統包工程", type:"個人", followers:32000,  posts:280,  er:8.4, freq:"高頻", hasSite:false, priority:1, bio:"專門記錄老屋翻新全過程，從拆除到完工每一步都拍給你看", tags:["老屋翻新","改造記錄","DIY修繕","省錢裝潢"], pitch:"你的老屋翻新記錄系列互動率極高，Google上每月有8,200次相關搜尋找不到你。" },
+    { id:5,  username:"renovation_diary", name:"裝潢日記本",       cat:"統包工程", type:"個人", followers:28000,  posts:196,  er:9.1, freq:"高頻", hasSite:false, priority:1, bio:"記錄自己裝潢新家的全過程，從零開始學裝潢", tags:["裝潢日記","自住裝修","業主視角","省錢攻略"], pitch:"" },
+
+    // 設計媒體
+    { id:6,  username:"searchome_tw",     name:"MY home 設計家",   cat:"設計媒體", type:"公司", followers:222000, posts:7554, er:0.8, freq:"高頻", hasSite:true,  priority:3, bio:"是設計師及裝潢者的好幫手，陪你打造100分夢想之家", tags:["設計靈感","案例分享","找設計師"], pitch:"" },
+    { id:7,  username:"100interior_design",name:"100室內設計",     cat:"設計媒體", type:"公司", followers:211000, posts:7100, er:0.6, freq:"高頻", hasSite:true,  priority:3, bio:"擁有大量室內設計案例，裝潢找靈感更容易", tags:["設計案例","裝潢靈感","媒體平台"], pitch:"" },
+    { id:8,  username:"gorgeous_space",   name:"幸福空間",          cat:"設計媒體", type:"公司", followers:122000, posts:6542, er:0.9, freq:"高頻", hasSite:true,  priority:3, bio:"華人地區最豐富的室內設計裝潢裝修分享", tags:["設計案例","媒體平台","靈感分享"], pitch:"" },
+    { id:9,  username:"design_tw_media",  name:"台灣設計誌",        cat:"設計媒體", type:"公司", followers:67000,  posts:2100, er:1.2, freq:"高頻", hasSite:true,  priority:2, bio:"台灣室內設計趨勢媒體，每日分享最新設計案例與風格趨勢", tags:["設計趨勢","案例媒體","風格靈感"], pitch:"" },
+    { id:10, username:"interior_daily_tw",name:"每日室設",           cat:"設計媒體", type:"個人", followers:41000,  posts:890,  er:2.3, freq:"高頻", hasSite:false, priority:2, bio:"每天分享一個讓你驚艷的設計細節，台灣在地設計觀察", tags:["設計觀察","細節控","在地設計"], pitch:"你的設計觀察型內容在IG有忠實粉絲，但在Google完全找不到你，這是我們能幫你的地方。" },
+
+    // 室內設計師
+    { id:11, username:"junpin_interior",  name:"J.P.室內設計日誌",  cat:"室內設計", type:"公司", followers:46000,  posts:486,  er:3.4, freq:"中頻", hasSite:true,  priority:2, bio:"你的空間，不該只有好看。住宅設計商空設計預售屋客變", tags:["住宅設計","商空設計","設計日誌"], pitch:"" },
+    { id:12, username:"designer_life_tw", name:"設計師張小靖",      cat:"室內設計", type:"個人", followers:38000,  posts:312,  er:5.6, freq:"高頻", hasSite:false, priority:1, bio:"一個設計師的日常碎念，分享設計心法與業主溝通技巧", tags:["設計師視角","溝通技巧","設計心法","職場日記"], pitch:"你的設計師碎念系列互動率高，這些內容對應的關鍵字每月有大量搜尋你完全沒拿到。" },
+    { id:13, username:"interior_chen",   name:"陳設計師の家",       cat:"室內設計", type:"個人", followers:34000,  posts:267,  er:6.8, freq:"高頻", hasSite:false, priority:1, bio:"做設計12年，現在開始記錄每一個讓業主哭泣的踩坑故事", tags:["踩坑故事","業主日記","設計避雷","案例記錄"], pitch:"你的踩坑故事系列是完美的SEO素材，這類內容的Google搜尋量很高，你卻完全不在結果裡。" },
+    { id:14, username:"space_story_tw",  name:"空間故事",            cat:"室內設計", type:"個人", followers:29000,  posts:234,  er:7.2, freq:"高頻", hasSite:false, priority:1, bio:"每個家都有一個故事，記錄從空殼到家的蛻變過程", tags:["案例記錄","空間改造","設計故事","在地設計師"], pitch:"" },
+    { id:15, username:"haodesign_tw",    name:"HAO Design 好室設計", cat:"室內設計", type:"公司", followers:22000,  posts:707,  er:2.8, freq:"高頻", hasSite:true,  priority:2, bio:"19年室內設計經驗，看屋到入住，事前預防診治裝潢疑難雜症", tags:["老屋診斷","設計諮詢","19年經驗"], pitch:"" },
+    { id:16, username:"design_notebook", name:"設計筆記本",          cat:"室內設計", type:"個人", followers:18000,  posts:445,  er:8.9, freq:"高頻", hasSite:false, priority:1, bio:"設計師手繪平面圖教學，幫業主看懂設計圖紙", tags:["設計圖教學","看懂平面圖","業主必看","設計知識"], pitch:"你的設計圖教學內容互動率破9%，這個主題在Google幾乎沒有優質文章，是極佳的SEO空缺。" },
+    { id:17, username:"style_interior_tw",name:"風格設計誌",         cat:"室內設計", type:"個人", followers:15000,  posts:321,  er:6.1, freq:"高頻", hasSite:false, priority:2, bio:"北歐日式混搭風格的設計日記，作品集在台北", tags:["北歐風","日式風格","混搭設計","台北設計師"], pitch:"" },
+    { id:18, username:"interior_secrets",name:"裝潢秘辛",            cat:"室內設計", type:"個人", followers:12000,  posts:189,  er:10.2,freq:"高頻", hasSite:false, priority:1, bio:"設計師說的你信不信？分享那些業內不會告訴你的事", tags:["業內秘辛","設計師說真話","裝潢知識","避坑"], pitch:"你的帳號互動率超過10%，遠高於同類帳號，你的影片有極強的SEO文章潛力。" },
+
+    // 居家佈置
+    { id:19, username:"home_deco_taiwan", name:"台灣居家風格誌",    cat:"居家佈置", type:"個人", followers:88000,  posts:1240, er:3.2, freq:"高頻", hasSite:false, priority:1, bio:"分享台灣在地居家佈置靈感，從軟件選購到空間搭配", tags:["居家佈置","軟件選購","北歐風","奶油風"], pitch:"你的奶油風佈置系列對應關鍵字每月有4,800次搜尋，但沒有文章去接住這些流量。" },
+    { id:20, username:"cozy_corner_tw",  name:"我的一角",            cat:"居家佈置", type:"個人", followers:72000,  posts:890,  er:4.5, freq:"高頻", hasSite:false, priority:1, bio:"把家佈置成最喜歡的樣子，不需要很多錢只需要一點巧思", tags:["省錢佈置","居家美學","創意改造","DIY佈置"], pitch:"你的省錢佈置內容有極高搜尋需求，我們可以讓Google用戶也找到你。" },
+    { id:21, username:"minimal_home_tw", name:"極簡生活家",           cat:"居家佈置", type:"個人", followers:61000,  posts:678,  er:5.1, freq:"高頻", hasSite:false, priority:1, bio:"極簡主義的生活日記，less is more的居家哲學", tags:["極簡主義","去雜亂","居家整理","less is more"], pitch:"" },
+    { id:22, username:"cream_home",      name:"奶油風居家",           cat:"居家佈置", type:"個人", followers:53000,  posts:567,  er:6.8, freq:"高頻", hasSite:false, priority:1, bio:"最喜歡奶油風，記錄把家改造成奶油色系的過程", tags:["奶油風","米白色系","居家改造","軟裝搭配"], pitch:"「奶油風裝潢」每月7,000次Google搜尋，你的帳號就是最好的內容來源。" },
+    { id:23, username:"japandi_home_tw", name:"侘寂風格日記",         cat:"居家佈置", type:"個人", followers:44000,  posts:432,  er:7.3, freq:"高頻", hasSite:false, priority:1, bio:"日式侘寂風×北歐簡約，在台灣的選物與佈置記錄", tags:["侘寂風","japandi","選物記錄","材質研究"], pitch:"" },
+    { id:24, username:"green_home_tw",   name:"植感生活",              cat:"居家佈置", type:"個人", followers:37000,  posts:523,  er:5.9, freq:"高頻", hasSite:false, priority:1, bio:"用植物改變空間氛圍，台灣居家植栽搭配指南", tags:["居家植栽","植感空間","室內植物","綠色佈置"], pitch:"" },
+    { id:25, username:"ikea_hack_tw",    name:"IKEA改造日誌",          cat:"居家佈置", type:"個人", followers:31000,  posts:287,  er:8.4, freq:"高頻", hasSite:false, priority:1, bio:"把IKEA家具改造成獨一無二的樣子，台灣DIY改造分享", tags:["IKEA改造","DIY家具","省錢佈置","創意改造"], pitch:"" },
+
+    // 空間攝影
+    { id:26, username:"space_photo_tw",  name:"空間攝影師林",         cat:"空間攝影", type:"個人", followers:42000,  posts:678,  er:4.2, freq:"中頻", hasSite:true,  priority:2, bio:"專業室內空間攝影，為設計師和建案提供高端攝影服務", tags:["空間攝影","室內攝影","商業攝影","建案攝影"], pitch:"" },
+    { id:27, username:"interior_lens",   name:"鏡頭裡的家",           cat:"空間攝影", type:"個人", followers:28000,  posts:445,  er:5.8, freq:"中頻", hasSite:false, priority:2, bio:"用攝影記錄每一個值得被看見的美好空間", tags:["空間美學","攝影日記","光影記錄","居家攝影"], pitch:"你的空間攝影作品在視覺上很強，轉成SEO文章可以讓設計師業主主動找你合作。" },
+    { id:28, username:"golden_hour_home",name:"光影之家",              cat:"空間攝影", type:"個人", followers:19000,  posts:312,  er:7.1, freq:"中頻", hasSite:false, priority:2, bio:"追逐家中最美的那道光，分享空間攝影技巧", tags:["自然採光","空間攝影技巧","居家光影","美感生活"], pitch:"" },
+
+    // 軟裝設計
+    { id:29, username:"soft_deco_master",name:"軟裝顧問Mia",          cat:"軟裝設計", type:"個人", followers:58000,  posts:732,  er:5.4, freq:"高頻", hasSite:false, priority:1, bio:"室內軟裝顧問，專攻家具選配色彩計畫與軟件搭配", tags:["軟裝設計","家具選配","色彩計畫","搭配教學"], pitch:"你的色彩搭配系列在Google有大量無競爭的搜尋空缺，是非常適合的SEO內容。" },
+    { id:30, username:"furniture_guide", name:"家具選購攻略",          cat:"軟裝設計", type:"個人", followers:47000,  posts:567,  er:6.2, freq:"高頻", hasSite:false, priority:1, bio:"幫你省錢選到對的家具，台灣家具選購完整指南", tags:["家具選購","省錢攻略","沙發推薦","床墊推薦"], pitch:"「家具推薦」「沙發選購」這類關鍵字月搜尋量高，你的內容完全符合，SEO機會很大。" },
+    { id:31, username:"color_theory_tw", name:"色彩說話家",            cat:"軟裝設計", type:"個人", followers:33000,  posts:423,  er:7.8, freq:"高頻", hasSite:false, priority:1, bio:"讓顏色為你的家說話，居家色彩搭配的科學與美學", tags:["色彩搭配","配色理論","居家色彩","設計知識"], pitch:"" },
+    { id:32, username:"material_study",  name:"材質研究室",            cat:"軟裝設計", type:"個人", followers:22000,  posts:289,  er:8.6, freq:"高頻", hasSite:false, priority:1, bio:"深度研究各種居家材質：磁磚木地板石材金屬的選用指南", tags:["材質研究","地板選購","磁磚攻略","石材知識"], pitch:"「木地板推薦」「磁磚選購」這類有高商業意圖的關鍵字月搜尋量高，你的內容完全匹配。" },
+    { id:33, username:"lighting_tw",     name:"燈光設計學",            cat:"軟裝設計", type:"個人", followers:18000,  posts:234,  er:9.3, freq:"高頻", hasSite:false, priority:1, bio:"居家燈光設計的終極指南，從燈具選購到燈光規劃", tags:["燈光設計","燈具選購","氛圍照明","色溫指南"], pitch:"「居家燈光設計」月搜尋量高且競爭低，你的內容是完美的SEO素材。" },
+
+    // 個人IP（設計師變KOL）
+    { id:34, username:"frank_designer",  name:"Frank設計隨筆",        cat:"個人IP",   type:"個人", followers:76000,  posts:534,  er:5.8, freq:"高頻", hasSite:false, priority:1, bio:"做設計18年，把職涯所學都說給你聽，設計師轉型KOL", tags:["設計師KOL","職涯分享","設計知識","從業者視角"], pitch:"你在IG已有7.6萬粉絲，但Google上找不到你的聲音。我們讓你成為搜尋引擎裡也找得到的設計師。" },
+    { id:35, username:"designer_lee_tw", name:"李設計師",              cat:"個人IP",   type:"個人", followers:64000,  posts:456,  er:6.4, freq:"高頻", hasSite:false, priority:1, bio:"從設計師到内容創作者，分享那些課本不會教你的事", tags:["設計師轉型","知識分享","業內知識","個人品牌"], pitch:"" },
+    { id:36, username:"arch_diary",      name:"建築師日記",            cat:"個人IP",   type:"個人", followers:51000,  posts:389,  er:5.2, freq:"高頻", hasSite:false, priority:1, bio:"建築師的日常碎念，從設計到施工的全過程記錄", tags:["建築師視角","施工記錄","設計流程","職人日記"], pitch:"" },
+    { id:37, username:"home_budget_tw",  name:"裝潢預算達人",          cat:"個人IP",   type:"個人", followers:43000,  posts:312,  er:7.6, freq:"高頻", hasSite:false, priority:1, bio:"幫你把裝潢預算花在刀口上，省錢不省質感", tags:["預算控管","CP值裝潢","省錢方案","報價比較"], pitch:"「裝潢預算」月搜尋超過6,200次，你的帳號是這個關鍵字的最佳內容創作者。" },
+    { id:38, username:"design_coach_tw", name:"設計思維教練",          cat:"個人IP",   type:"個人", followers:36000,  posts:278,  er:6.9, freq:"高頻", hasSite:false, priority:1, bio:"用設計師的眼睛看生活，教你把設計思維用在每件事上", tags:["設計思維","生活美學","個人品牌","知識型創作"], pitch:"" },
+    { id:39, username:"renovation_coach",name:"裝潢教練",              cat:"個人IP",   type:"個人", followers:29000,  posts:234,  er:8.1, freq:"高頻", hasSite:false, priority:1, bio:"教你成為自己的裝潢專家，業主視角的裝修全攻略", tags:["裝潢教學","業主攻略","避坑指南","施工監督"], pitch:"" },
+    { id:40, username:"interior_talk",   name:"設計師聊聊天",          cat:"個人IP",   type:"個人", followers:24000,  posts:345,  er:7.4, freq:"高頻", hasSite:false, priority:1, bio:"設計師聊設計，沒有專業術語只有大白話", tags:["設計師白話文","平民設計","知識輸出","親民設計師"], pitch:"" },
+
+    // 補充帳號（填滿多樣性）
+    { id:41, username:"ciaocasa_tw",     name:"巧寓舍計",             cat:"室內設計", type:"公司", followers:207000, posts:1496, er:1.1, freq:"高頻", hasSite:true,  priority:3, bio:"室內設計新屋裝潢舊屋翻新商業空間，五成尾款驗收再付", tags:["住宅設計","舊屋翻新","商業空間","設計公司"], pitch:"" },
+    { id:42, username:"home_styling_tw", name:"家的樣子",             cat:"居家佈置", type:"個人", followers:26000,  posts:312,  er:8.2, freq:"高頻", hasSite:false, priority:1, bio:"記錄把租屋處佈置成夢想中家的過程，最小預算最大效果", tags:["租屋佈置","小資族","DIY改造","省錢布置"], pitch:"" },
+    { id:43, username:"detail_design_tw",name:"設計細節癖",           cat:"室內設計", type:"個人", followers:21000,  posts:267,  er:9.4, freq:"高頻", hasSite:false, priority:1, bio:"那些你沒注意到但設計師很在意的細節，一個細節控的分享", tags:["設計細節","細節控","工藝精神","設計知識"], pitch:"你的帳號互動率9.4%，高品質知識型受眾，非常適合轉成SEO文章。" },
+    { id:44, username:"new_house_guide", name:"新成屋攻略",            cat:"個人IP",   type:"個人", followers:19000,  posts:198,  er:7.8, freq:"高頻", hasSite:false, priority:1, bio:"從購屋到裝潢的完整指南，新手業主最需要的資訊", tags:["新成屋","購屋攻略","客變","裝潢準備"], pitch:"" },
+    { id:45, username:"prebuilt_guide",  name:"預售屋客變達人",       cat:"個人IP",   type:"個人", followers:16000,  posts:156,  er:8.9, freq:"高頻", hasSite:false, priority:1, bio:"預售屋客變的眉眉角角，幫你少花冤枉錢", tags:["預售屋客變","格局調整","客變費用","踩坑預防"], pitch:"「預售屋客變」是高搜尋量低競爭關鍵字，你的帳號是這個主題最好的創作者。" },
+    { id:46, username:"smart_home_tw",   name:"智能家居台灣",         cat:"個人IP",   type:"個人", followers:34000,  posts:289,  er:5.6, freq:"高頻", hasSite:false, priority:1, bio:"把家變聰明，台灣智慧家居的實測與開箱", tags:["智慧家居","全屋智能","開箱實測","IoT居家"], pitch:"" },
+    { id:47, username:"outdoor_living",  name:"戶外陽台生活",         cat:"居家佈置", type:"個人", followers:28000,  posts:234,  er:6.7, freq:"高頻", hasSite:false, priority:1, bio:"把陽台變成第二個客廳，台灣陽台佈置與植栽攻略", tags:["陽台佈置","戶外空間","陽台植栽","小空間改造"], pitch:"" },
+    { id:48, username:"kitchen_design",  name:"廚房設計研究",         cat:"室內設計", type:"個人", followers:24000,  posts:312,  er:7.2, freq:"高頻", hasSite:false, priority:1, bio:"廚房是家的靈魂，深度研究台灣廚房設計與收納", tags:["廚房設計","廚房收納","廚具選購","中西廚設計"], pitch:"" },
+    { id:49, username:"bathroom_pro",    name:"衛浴改造專家",         cat:"統包工程", type:"個人", followers:22000,  posts:189,  er:8.4, freq:"高頻", hasSite:false, priority:1, bio:"專注衛浴翻新改造，教你選對材料找對師傅", tags:["衛浴翻新","浴室設計","乾濕分離","磁磚選購"], pitch:"" },
+    { id:50, username:"floor_material",  name:"地板材質學",            cat:"軟裝設計", type:"個人", followers:17000,  posts:178,  er:9.1, freq:"高頻", hasSite:false, priority:1, bio:"深度研究各種地板材質，幫你選到最適合自己家的地板", tags:["地板選購","木地板","SPC地板","磁磚地板","超耐磨"], pitch:"「木地板推薦」「SPC地板比較」這類比較型關鍵字月搜尋量很高，你的內容非常匹配。" },
+  ]
+};
+
+// ══════════════════════════════════════════
+// APP LOGIC
+// ══════════════════════════════════════════
+let currentCat = '全部';
+let currentType = '全部';
+let currentSort = 'followers_desc';
+let searchQuery = '';
+let sortAsc = false;
+let selectedRow = null;
+
+const MAX_FOLLOWERS = Math.max(...window.KOL_DATA.creators.map(c => c.followers));
+
+function fmtNum(n) {
+  if (n >= 10000) return (n / 10000).toFixed(1) + '萬';
+  if (n >= 1000)  return (n / 1000).toFixed(1) + 'K';
+  return n.toString();
+}
+
+function erClass(er) {
+  if (er >= 6) return 'er-high';
+  if (er >= 3) return 'er-mid';
+  return 'er-low';
+}
+
+function freqDot(f) {
+  if (f === '高頻') return 'freq-active';
+  if (f === '中頻') return 'freq-moderate';
+  return 'freq-low';
+}
+
+function getAvgER() {
+  const all = window.KOL_DATA.creators;
+  return (all.reduce((s,c) => s + c.er, 0) / all.length).toFixed(1) + '%';
+}
+
+function initStats() {
+  const all = window.KOL_DATA.creators;
+  document.getElementById('stat-total').textContent = all.length;
+  document.getElementById('stat-active').textContent = all.filter(c => c.freq === '高頻').length;
+  document.getElementById('stat-nosite').textContent = all.filter(c => !c.hasSite).length;
+  document.getElementById('stat-avg-er').textContent = getAvgER();
+  document.getElementById('stat-pri1').textContent = all.filter(c => c.priority === 1).length;
+  document.getElementById('lastUpdated').textContent = window.KOL_DATA.lastUpdated + ' 更新';
+  document.getElementById('headerCount').textContent = all.length + ' 位創作者';
+}
+
+function getFiltered() {
+  let data = [...window.KOL_DATA.creators];
+  if (currentCat !== '全部') data = data.filter(c => c.cat === currentCat);
+  if (currentType !== '全部') data = data.filter(c => c.type === currentType);
+  if (searchQuery) {
+    const q = searchQuery.toLowerCase();
+    data = data.filter(c => c.name.toLowerCase().includes(q) || c.username.toLowerCase().includes(q));
+  }
+  // sort
+  const s = currentSort;
+  data.sort((a,b) => {
+    if (s === 'followers_desc') return b.followers - a.followers;
+    if (s === 'followers_asc')  return a.followers - b.followers;
+    if (s === 'er_desc')        return b.er - a.er;
+    if (s === 'priority_asc')   return a.priority - b.priority;
+    return 0;
+  });
+  return data;
+}
+
+function renderTable() {
+  const data = getFiltered();
+  const tbody = document.getElementById('tableBody');
+  document.getElementById('countLabel').textContent = `顯示 ${data.length} 位 / 共 ${window.KOL_DATA.creators.length} 位`;
+
+  if (!data.length) {
+    tbody.innerHTML = '<tr class="loading-row"><td colspan="10">找不到符合條件的創作者</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = data.map((c, i) => {
+    const barW = Math.round(c.followers / MAX_FOLLOWERS * 100);
+    const initials = c.name.slice(0,1);
+    return `
+      <tr onclick="showDetail(${c.id})" data-id="${c.id}">
+        <td class="col-rank"><span class="rank-num">${i+1}</span></td>
+        <td class="col-acct">
+          <div class="acct-block">
+            <div class="avatar">${initials}</div>
+            <div>
+              <div class="acct-name">${c.name}</div>
+              <div class="acct-handle"><a href="https://instagram.com/${c.username}" target="_blank" onclick="event.stopPropagation()">@${c.username}</a></div>
+            </div>
+          </div>
+        </td>
+        <td class="col-cat"><span class="cat-badge cat-${c.cat}">${c.cat}</span></td>
+        <td class="col-type"><span class="type-badge type-${c.type}">${c.type}</span></td>
+        <td class="col-fans">
+          <div class="fans-num">${fmtNum(c.followers)}</div>
+          <div class="fans-bar-wrap"><div class="fans-bar" style="width:${barW}%"></div></div>
+        </td>
+        <td class="col-posts"><span style="font-family:var(--mono);font-size:12px;color:var(--text2)">${c.posts.toLocaleString()}</span></td>
+        <td class="col-er"><span class="er-num ${erClass(c.er)}">${c.er}%</span></td>
+        <td class="col-freq">
+          <span class="freq-dot ${freqDot(c.freq)}"></span>
+          <span class="freq-chip">${c.freq}</span>
+        </td>
+        <td class="col-site"><span class="${c.hasSite ? 'site-yes' : 'site-no'}">${c.hasSite ? '✓ 有' : '✗ 無'}</span></td>
+        <td class="col-pri"><span class="pri-badge pri-${c.priority}">P${c.priority}</span></td>
+      </tr>`;
+  }).join('');
+}
+
+function showDetail(id) {
+  const c = window.KOL_DATA.creators.find(x => x.id === id);
+  if (!c) return;
+
+  // highlight row
+  document.querySelectorAll('tbody tr').forEach(r => r.style.background = '');
+  const row = document.querySelector(`tr[data-id="${id}"]`);
+  if (row) row.style.background = 'var(--bg3)';
+
+  document.getElementById('panelAvatar').innerHTML = c.name.slice(0,1);
+  document.getElementById('panelName').textContent = c.name;
+  document.getElementById('panelHandle').innerHTML = `<a href="https://instagram.com/${c.username}" target="_blank">@${c.username}</a>`;
+  document.getElementById('panelBio').textContent = c.bio;
+
+  document.getElementById('panelStats').innerHTML = `
+    <div class="ps-box"><div class="ps-val">${fmtNum(c.followers)}</div><div class="ps-key">粉絲數</div></div>
+    <div class="ps-box"><div class="ps-val ${erClass(c.er)}">${c.er}%</div><div class="ps-key">互動率</div></div>
+    <div class="ps-box"><div class="ps-val">${c.posts.toLocaleString()}</div><div class="ps-key">貼文數</div></div>
+    <div class="ps-box"><div class="ps-val">${c.hasSite ? '✓' : '✗'}</div><div class="ps-key">自架站</div></div>
+  `;
+
+  document.getElementById('panelTags').innerHTML = c.tags.map(t => `<span class="panel-tag">${t}</span>`).join('');
+  document.getElementById('panelPitch').textContent = c.pitch || '（尚未設定邀約話術）';
+  document.getElementById('panelIGLink').href = `https://instagram.com/${c.username}`;
+
+  document.getElementById('detail-panel').classList.add('open');
+}
+
+function closePanel() {
+  document.getElementById('detail-panel').classList.remove('open');
+  document.querySelectorAll('tbody tr').forEach(r => r.style.background = '');
+}
+
+// Filters
+document.querySelectorAll('[data-cat]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('[data-cat]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentCat = btn.dataset.cat;
+    renderTable();
+  });
+});
+
+document.querySelectorAll('[data-type]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('[data-type]').forEach(b => {
+      if (b.dataset.type) b.classList.remove('active');
+    });
+    btn.classList.add('active');
+    currentType = btn.dataset.type;
+    renderTable();
+  });
+});
+
+document.getElementById('sortSelect').addEventListener('change', e => {
+  currentSort = e.target.value;
+  renderTable();
+});
+
+document.getElementById('searchInput').addEventListener('input', e => {
+  searchQuery = e.target.value.trim();
+  renderTable();
+});
+
+// Guide toggle
+function toggleGuide() {
+  const body = document.getElementById('guideBody');
+  const toggle = document.getElementById('guideToggle');
+  body.classList.toggle('open');
+  toggle.textContent = body.classList.contains('open') ? '收起 ▴' : '展開 ▾';
+}
+
+// Init
+initStats();
+renderTable();
+</script>
+</body>
+</html>
