@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
@@ -190,8 +191,8 @@ nav{position:sticky;top:0;z-index:100;background:rgba(250,250,248,.93);backdrop-
 .cta-email-wrap{display:inline-flex;align-items:center;gap:14px;padding:18px 28px;border:1px solid rgba(82,183,136,.35);border-radius:4px;background:rgba(82,183,136,.06);transition:border-color .2s,background .2s}
 .cta-email-wrap:hover{border-color:var(--accent2);background:rgba(82,183,136,.1)}
 .cta-email-icon{font-size:20px;opacity:.7}
-.cta-email-link{font-family:var(--serif);font-size:20px;color:var(--accent2);text-decoration:none;letter-spacing:.02em;font-weight:400}
-.cta-email-link:hover{color:#fff}
+.cta-email-link{font-family:var(--serif);font-size:20px;color:#fff;text-decoration:none;letter-spacing:.02em;font-weight:400}
+.cta-email-link:hover{color:var(--accent2)}
 footer{border-top:1px solid var(--line);padding:28px 48px;display:flex;align-items:center;justify-content:space-between;max-width:960px;margin:0 auto}
 .foot-brand{font-family:var(--serif);font-size:14px;color:var(--ink3)}
 .foot-meta{font-size:12px;color:var(--ink4)}
@@ -232,6 +233,17 @@ footer{border-top:1px solid var(--line);padding:28px 48px;display:flex;align-ite
   .traffic-callout{flex-direction:column;gap:20px}
   .tc-divider{display:none}
 }
+
+/* ── LIVE LOOKUP STATES ── */
+.lookup-btn.loading{background:var(--ink3);cursor:not-allowed;pointer-events:none}
+.lookup-btn.loading::after{content:'';display:inline-block;width:12px;height:12px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;margin-left:8px;vertical-align:middle}
+@keyframes spin{to{transform:rotate(360deg)}}
+.live-badge{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;padding:2px 8px;border-radius:2px;margin-bottom:12px}
+.live-badge.live{background:rgba(82,183,136,.15);color:var(--accent2)}
+.live-badge.cached{background:rgba(176,174,184,.12);color:rgba(255,255,255,.4)}
+.live-badge::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor}
+.rm-sub{font-size:10px;color:rgba(255,255,255,.3);margin-top:1px}
+.error-card{display:none;margin-top:16px;padding:14px 16px;background:rgba(192,57,43,.12);border:1px solid rgba(192,57,43,.25);border-radius:4px;font-size:13px;color:rgba(255,255,255,.6);text-align:center}
 </style>
 </head>
 <body>
@@ -263,7 +275,7 @@ footer{border-top:1px solid var(--line);padding:28px 48px;display:flex;align-ite
   <div class="lookup-inner">
     <div class="lookup-eyebrow">查詢你的排名</div>
     <h2 class="lookup-title">你的競業每個月在<br>Google 拿走多少流量？<br>你是<em>第幾名</em>？</h2>
-    <p class="lookup-sub">輸入你的 Instagram 帳號，看你在這 100 位裡的排名與 Google 流量分析</p>
+    <p class="lookup-sub">輸入任何 Instagram 帳號——即時抓取真實數據，看他在市場的位置</p>
     <div class="lookup-form">
       <div class="lookup-at">@</div>
       <input class="lookup-input" type="text" id="lookupInput" placeholder="your_ig_handle" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false">
@@ -273,6 +285,7 @@ footer{border-top:1px solid var(--line);padding:28px 48px;display:flex;align-ite
 
     <div id="result-area">
       <div class="result-card" id="resultCard">
+        <div id="liveBadge" class="live-badge live" style="display:none">即時資料</div>
         <div class="result-header">
           <div class="result-rank-block">
             <div class="result-rank-label">整體排名</div>
@@ -302,15 +315,15 @@ footer{border-top:1px solid var(--line);padding:28px 48px;display:flex;align-ite
           </div>
           <div class="rm-box">
             <div class="rm-val" id="res-google-traffic">—</div>
-            <div class="rm-key">月 Google 流量（估）</div>
+            <div class="rm-key">月 Google 流量（估算）</div><div class="rm-sub" id="res-google-source"></div>
           </div>
           <div class="rm-box">
             <div class="rm-val" id="res-kw-rank">—</div>
-            <div class="rm-key">最強關鍵字排名</div>
+            <div class="rm-key">最強關鍵字排名（估算）</div>
           </div>
           <div class="rm-box">
             <div class="rm-val" id="res-kw-vol">—</div>
-            <div class="rm-key">該詞月搜尋量</div>
+            <div class="rm-key">該詞月搜尋量（估算）</div>
           </div>
         </div>
 
@@ -318,7 +331,7 @@ footer{border-top:1px solid var(--line);padding:28px 48px;display:flex;align-ite
         <div class="traffic-loss-banner" id="trafficLossBanner">
           <div class="tlb-header">
             <span class="tlb-icon">⚠️</span>
-            <span class="tlb-label">估算每月流失 Google 流量</span>
+            <span class="tlb-label">估算每月流失 Google 流量（估算）</span>
             <div>
               <div class="tlb-num" id="tlb-num">—</div>
               <div class="tlb-unit">次 / 月</div>
@@ -344,6 +357,7 @@ footer{border-top:1px solid var(--line);padding:28px 48px;display:flex;align-ite
         </div>
       </div>
       <div id="not-found">找不到這個帳號——你可能還不在名單裡，或帳號輸入有誤。</div>
+      <div class="error-card" id="errorCard">查詢失敗，請稍後再試</div>
     </div>
   </div>
 </section>
@@ -363,7 +377,7 @@ footer{border-top:1px solid var(--line);padding:28px 48px;display:flex;align-ite
   <!-- top 100 table -->
   <div class="sec-label">完整名單</div>
   <h2 class="sec-title">100 位創作者排名</h2>
-  <p class="sec-sub">新增 Google 月流量與最強關鍵字欄位。有網站 vs 無網站的流量落差，一眼看清。</p>
+  <p class="sec-sub">有網站 vs 無網站的流量落差，一眼看清。</p>
 
   <div class="filter-row" id="filterRow">
     <button class="filt-btn active" data-cat="全部">全部</button>
@@ -391,8 +405,8 @@ footer{border-top:1px solid var(--line);padding:28px 48px;display:flex;align-ite
       <div class="th">分類</div>
       <div class="th r">粉絲數</div>
       <div class="th r">互動率</div>
-      <div class="th r">Google 流量</div>
-      <div class="th r">最強關鍵字</div>
+      <div class="th r">Google 流量（估）</div>
+      <div class="th r">最強關鍵字（估）</div>
     </div>
     <div id="tableBody"></div>
   </div>
@@ -418,6 +432,13 @@ footer{border-top:1px solid var(--line);padding:28px 48px;display:flex;align-ite
   </div>
 </section>
 
+
+<!-- DISCLAIMER BAR -->
+<div style="background:var(--paper2);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:10px 48px;text-align:center">
+  <span style="font-size:11px;color:var(--ink4);letter-spacing:.02em">
+    ⓘ 本報告所有 Google 流量、互動率、關鍵字排名均為依公開資料推算之<strong style="color:var(--ink3);font-weight:500">估計值</strong>，僅供市場參考，不代表各帳號之實際數據。
+  </span>
+</div>
 <footer>
   <div class="foot-brand">design-a-house.tw ✦ 台灣室內設計 IG 生態報告</div>
   <div class="foot-meta" id="footDate">資料每月自動更新</div>
@@ -432,6 +453,9 @@ footer{border-top:1px solid var(--line);padding:28px 48px;display:flex;align-ite
 //   topKeyword     : 最強排名關鍵字（有網站者填；無網站者填空缺機會詞）
 //   keywordRank    : 該關鍵字目前排名（有網站者填；無網站者填 null）
 //   keywordVolume  : 該關鍵字月搜尋量
+//
+// ⚠️  免責聲明：所有 Google 流量、互動率、關鍵字排名數字
+//    均為依公開資料推算之估計值，僅供參考，不代表實際數據。
 // ══════════════════════════════════════════
 const DATA = {
   lastUpdated: "2026-06",
@@ -514,7 +538,7 @@ function fmtNum(n){
 // ── INIT HERO ──
 document.getElementById('hs-total').textContent    = DATA.creators.length;
 document.getElementById('hs-nosite').textContent   = noSiteCount+'位';
-document.getElementById('hs-lost-traffic').textContent = fmtNum(totalLostTraffic)+'+';
+document.getElementById('hs-lost-traffic').textContent = fmtNum(totalLostTraffic)+'+（估）';
 document.getElementById('hs-avgfans').textContent  = fmtFans(avgFans);
 document.getElementById('hs-updated').textContent  = DATA.lastUpdated;
 document.getElementById('navDate').textContent     = DATA.lastUpdated+' 更新';
@@ -526,7 +550,7 @@ const avgHasTraffic = hasTraffic.length ? Math.round(hasTraffic.reduce((s,c)=>s+
 document.getElementById('trafficCallout').innerHTML = `
   <div class="tc-stat">
     <div class="tc-num" style="color:var(--accent)">${fmtNum(avgHasTraffic)}</div>
-    <div class="tc-label">有網站者平均月流量</div>
+    <div class="tc-label">有網站者平均月流量（估算）</div>
   </div>
   <div class="tc-divider"></div>
   <div class="tc-stat">
@@ -535,9 +559,9 @@ document.getElementById('trafficCallout').innerHTML = `
   </div>
   <div class="tc-divider"></div>
   <div class="tc-desc">
-    <strong>這 ${noSiteCount} 位無網站的創作者，每個月合計讓 ${fmtNum(totalLostTraffic)}+ 次主動搜尋業主找不到他們。</strong>
+    <strong>這 ${noSiteCount} 位無網站的創作者，每個月合計估算讓 ${fmtNum(totalLostTraffic)}+ 次主動搜尋業主找不到他們（估計值）。</strong>
     這些流量不會消失——它們全部流向有網站且做了 SEO 的競業和媒體平台。
-    有網站的創作者平均每月接收 ${fmtNum(avgHasTraffic)} 次 Google 有機流量，相當於每天有 ${Math.round(avgHasTraffic/30)} 個陌生業主主動找上門。
+    有網站的創作者平均每月估算接收 ${fmtNum(avgHasTraffic)} 次 Google 有機流量（估算值），相當於每天有 ${Math.round(avgHasTraffic/30)} 個陌生業主主動找上門。
   </div>`;
 
 // ── LOOKUP ──
@@ -570,7 +594,7 @@ function doLookup(){
   // google traffic
   const gtEl = document.getElementById('res-google-traffic');
   if(c.hasSite && c.googleTraffic>0){
-    gtEl.textContent  = fmtNum(c.googleTraffic)+' 次';
+    gtEl.textContent  = fmtNum(c.googleTraffic)+' 次（估）';
     gtEl.className    = 'rm-val good';
   } else {
     gtEl.textContent  = '0';
@@ -602,7 +626,7 @@ function doLookup(){
     const catPeers  = DATA.creators.filter(x=>x.cat===c.cat&&x.hasSite&&x.googleTraffic>0);
     const catAvgG   = catPeers.length ? Math.round(catPeers.reduce((s,x)=>s+x.googleTraffic,0)/catPeers.length) : 0;
     document.getElementById('tlb-body').innerHTML =
-      `同分類「<strong>${c.cat}</strong>」有網站的創作者平均每月從 Google 獲得 <strong>${fmtNum(catAvgG)} 次</strong>有機流量。`+
+      `同分類「<strong>${c.cat}</strong>」有網站的創作者平均每月從 Google 獲得 <strong>${fmtNum(catAvgG)} 次（估算）</strong>有機流量。`+
       `你目前在 Google 上是隱形的——你的受眾在主動搜尋「${c.topKeyword}」（月搜尋量 ${fmtNum(c.keywordVolume)}），但找到的是你的競業，不是你。`;
   } else {
     banner.style.display    = 'none';
@@ -621,7 +645,7 @@ function doLookup(){
               `每個月有 <strong>${fmtNum(c.keywordVolume)} 人</strong>在 Google 搜尋「${c.topKeyword}」，這些業主正在主動找人，卻找不到你。`;
   } else {
     const betterKw = DATA.creators.filter(x=>x.hasSite&&x.cat===c.cat&&x.googleTraffic>c.googleTraffic);
-    insight = `你在 <strong>${c.cat}</strong> 分類排第 ${catRank} 名，每月 Google 流量約 <strong>${fmtNum(c.googleTraffic)} 次</strong>。`+
+    insight = `你在 <strong>${c.cat}</strong> 分類排第 ${catRank} 名，每月 Google 流量約 <strong>${fmtNum(c.googleTraffic)} 次（估算）</strong>。`+
               (betterKw.length ? `同分類有 ${betterKw.length} 個帳號的網站流量高於你，最強的是「${betterKw[0].name}」（${fmtNum(betterKw[0].googleTraffic)} 次/月）。關鍵字「${c.topKeyword}」你排第 ${c.keywordRank} 名，還有往前衝的空間。` :
               `你是同分類 Google 流量最高的創作者，持續維護 SEO 結構可以進一步拉開差距。`);
   }
@@ -629,7 +653,232 @@ function doLookup(){
   document.getElementById('result-area').scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 
-document.getElementById('lookupInput').addEventListener('keydown',e=>{if(e.key==='Enter')doLookup()});
+// ══════════════════════════════════════════
+// CONFIGURATION — 填入你的 Cloudflare Worker URL
+// ══════════════════════════════════════════
+const WORKER_URL = 'https://design-house-tw.weimi-chen.workers.dev/';
+
+// ── LOOKUP ──
+async function doLookup(){
+  const q = document.getElementById('lookupInput').value.trim().replace(/^@/,'').toLowerCase();
+  if(!q) return;
+
+  // 先查本地 DATA
+  const cached = DATA.creators.find(x => x.u.toLowerCase() === q);
+
+  // UI reset
+  const btn = document.querySelector('.lookup-btn');
+  btn.classList.add('loading');
+  btn.textContent = '查詢中';
+  document.getElementById('result-area').style.display = 'block';
+  document.getElementById('resultCard').style.display  = 'none';
+  document.getElementById('not-found').style.display   = 'none';
+  document.getElementById('errorCard').style.display   = 'none';
+  document.getElementById('liveBadge').style.display   = 'none';
+
+  try {
+    // call Cloudflare Worker proxy
+    const resp = await fetch(`${WORKER_URL}/profile?username=${encodeURIComponent(q)}`, {
+      signal: AbortSignal.timeout(20000)
+    });
+
+    if(!resp.ok) throw new Error('API error ' + resp.status);
+    const live = await resp.json();
+
+    if(!live || !live.username){
+      // 帳號不存在或私人帳號
+      document.getElementById('not-found').style.display = 'block';
+      document.getElementById('not-found').textContent =
+        live?.error === 'private'
+          ? '這個帳號是私人帳號，無法取得數據。'
+          : '找不到這個帳號——請確認帳號名稱是否正確。';
+      return;
+    }
+
+    // 合併：live 資料為主，cached 補充分類/話術/關鍵字
+    const c = buildCreator(live, cached);
+    renderResult(c, true);
+
+  } catch(err) {
+    console.warn('Worker fetch failed, falling back to cached:', err);
+    if(cached){
+      renderResult(cached, false);
+    } else {
+      document.getElementById('errorCard').style.display = 'block';
+      document.getElementById('errorCard').textContent   =
+        err.name === 'TimeoutError'
+          ? '查詢逾時，請稍後再試。'
+          : '查詢失敗：' + err.message;
+    }
+  } finally {
+    btn.classList.remove('loading');
+    btn.textContent = '查詢 →';
+  }
+}
+
+function buildCreator(live, cached){
+  const followers = live.followersCount ?? live.followers ?? 0;
+  const posts     = live.postsCount     ?? live.mediaCount ?? 0;
+  const bio       = (live.biography ?? live.bio ?? '').slice(0, 150);
+  const hasSite   = !!(live.externalUrl ?? live.website ?? '');
+
+  // ER 計算（若 latestPosts 存在）
+  let er = 0;
+  if(live.latestPosts && live.latestPosts.length > 0){
+    const n = Math.min(live.latestPosts.length, 12);
+    const total = live.latestPosts.slice(0, n)
+      .reduce((s, p) => s + (p.likesCount||0) + (p.commentsCount||0), 0);
+    er = followers > 0 ? Math.round(total/n/followers*1000)/10 : 0;
+  } else {
+    // 粉絲數估算
+    if(followers < 5000)       er = 10;
+    else if(followers < 15000) er = 7.5;
+    else if(followers < 50000) er = 5.5;
+    else if(followers < 100000)er = 3.5;
+    else                        er = 1.8;
+  }
+
+  // 排名（在 DATA 裡的位置，或依粉絲數估算）
+  let rank = null;
+  const idx = DATA.creators.findIndex(x => x.u.toLowerCase() === live.username.toLowerCase());
+  if(idx >= 0) rank = DATA.creators[idx].rank;
+
+  return {
+    u:             live.username.toLowerCase(),
+    name:          live.fullName || live.username,
+    cat:           cached?.cat         || '（未分類）',
+    followers,
+    posts,
+    er,
+    hasSite,
+    bio,
+    rank,
+    googleTraffic: cached?.googleTraffic ?? (hasSite ? null : 0),
+    trafficLoss:   cached?.trafficLoss   ?? 0,
+    topKeyword:    cached?.topKeyword    ?? null,
+    keywordRank:   cached?.keywordRank   ?? null,
+    keywordVolume: cached?.keywordVolume ?? null,
+    pitch:         cached?.pitch         ?? '',
+    isLive: true,
+  };
+}
+
+function renderResult(c, isLive){
+  const total = DATA.creators.length;
+
+  document.getElementById('resultCard').style.display = 'block';
+
+  // live badge
+  const badge = document.getElementById('liveBadge');
+  badge.style.display = 'inline-flex';
+  badge.className = 'live-badge ' + (isLive ? 'live' : 'cached');
+  badge.innerHTML = isLive
+    ? '<span style="width:5px;height:5px;border-radius:50%;background:currentColor;display:inline-block"></span> 即時資料'
+    : '<span style="width:5px;height:5px;border-radius:50%;background:currentColor;display:inline-block"></span> 名單資料';
+
+  // rank
+  if(c.rank){
+    document.getElementById('res-rank').textContent       = c.rank;
+    document.getElementById('res-rank-total').textContent = '/ ' + total;
+  } else {
+    document.getElementById('res-rank').textContent       = '—';
+    document.getElementById('res-rank-total').textContent = '不在本期名單';
+  }
+
+  document.getElementById('res-name').textContent    = c.name;
+  document.getElementById('res-handle').textContent  = '@' + c.u;
+  document.getElementById('res-cat').textContent     = c.cat;
+  document.getElementById('res-fans').textContent    = fmtFans(c.followers);
+  document.getElementById('res-ig-link').href        = 'https://instagram.com/' + c.u;
+
+  // ER
+  const erDiff = (c.er - parseFloat(avgER)).toFixed(1);
+  const erEl   = document.getElementById('res-er');
+  erEl.textContent = c.er + '% (' + (erDiff >= 0 ? '+' : '') + erDiff + '%)';
+  erEl.className   = 'rm-val ' + (c.er >= 6 ? 'good' : c.er >= 3 ? 'warn' : 'bad');
+
+  // site
+  const siteEl = document.getElementById('res-site');
+  siteEl.textContent = c.hasSite ? '✓ 有' : '✗ 無';
+  siteEl.className   = 'rm-val ' + (c.hasSite ? 'good' : 'warn');
+
+  // Google traffic
+  const gtEl  = document.getElementById('res-google-traffic');
+  const gtSrc = document.getElementById('res-google-source');
+  if(c.hasSite && c.googleTraffic != null && c.googleTraffic > 0){
+    gtEl.textContent    = fmtNum(c.googleTraffic) + '/月（估）';
+    gtEl.className      = 'rm-val good';
+    gtSrc.textContent   = '有機搜尋流量';
+  } else if(!c.hasSite){
+    gtEl.textContent    = '—';
+    gtEl.className      = 'rm-val bad';
+    gtSrc.textContent   = '無網站，無法累積';
+  } else {
+    gtEl.textContent    = '—';
+    gtEl.className      = 'rm-val';
+    gtSrc.textContent   = '待取得 GSC 資料';
+  }
+
+  // keyword rank & volume
+  const kwRankEl = document.getElementById('res-kw-rank');
+  const kwVolEl  = document.getElementById('res-kw-vol');
+  if(c.topKeyword){
+    kwRankEl.textContent = c.keywordRank ? '第' + c.keywordRank + '名' : '未排名';
+    kwRankEl.className   = 'rm-val ' + (c.keywordRank && c.keywordRank <= 5 ? 'good' : 'warn');
+    kwVolEl.textContent  = fmtNum(c.keywordVolume) + '/月';
+    kwVolEl.className    = 'rm-val';
+  } else {
+    kwRankEl.textContent = '—';
+    kwRankEl.className   = 'rm-val';
+    kwVolEl.textContent  = '—';
+    kwVolEl.className    = 'rm-val';
+  }
+
+  // keyword spotlight
+  const kwSpot = document.getElementById('kwSpotlight');
+  if(c.hasSite && c.topKeyword && c.keywordRank){
+    kwSpot.style.display = 'block';
+    document.getElementById('kw-pill-word').textContent = c.topKeyword;
+    document.getElementById('kw-pill-rank').textContent = '第 '+c.keywordRank+' 名';
+    document.getElementById('kw-pill-vol').textContent  = '月搜尋 '+fmtNum(c.keywordVolume);
+  } else {
+    kwSpot.style.display = 'none';
+  }
+
+  // traffic loss banner
+  const tlb = document.getElementById('trafficLossBanner');
+  if(!c.hasSite && c.trafficLoss > 0){
+    tlb.style.display = 'block';
+    document.getElementById('tlb-num').textContent = fmtNum(c.trafficLoss);
+    const catTopKw = c.topKeyword ? `「${c.topKeyword}」` : '相關關鍵字';
+    document.getElementById('tlb-body').innerHTML =
+      `每個月有約 <strong>${fmtNum(c.trafficLoss)} 次</strong>主動搜尋 ${catTopKw} 的業主，因為找不到你的網站而流向其他人。` +
+      `這些流量不會消失——你建一個 SEO 優化的媒體站，就能把它們接回來。`;
+  } else {
+    tlb.style.display = 'none';
+  }
+
+  // insight
+  const catPeers   = DATA.creators.filter(x => x.cat === c.cat);
+  const catRank    = c.rank ? catPeers.findIndex(x => x.u === c.u) + 1 : null;
+  const betterKw   = catPeers.filter(x => x.hasSite && x.googleTraffic > 0);
+  let insight = '';
+  if(!c.hasSite){
+    insight = `你在 <strong>${c.cat}</strong> 分類${catRank ? '排第 '+catRank+' 名（共 '+catPeers.length+' 位），' : ''}粉絲數 ${fmtFans(c.followers)}、互動率 ${c.er}%——` +
+      `但你沒有自架網站，Google 搜尋完全找不到你。` +
+      (c.topKeyword ? `「${c.topKeyword}」每月有 ${fmtNum(c.keywordVolume)} 次搜尋，這些正在準備裝修的業主都與你擦肩而過。` : '');
+  } else if(betterKw.length > 0){
+    insight =
+      (betterKw.length ? `同分類有 ${betterKw.length} 個帳號的網站流量高於你，最強的是「${betterKw[0].name}」（${fmtNum(betterKw[0].googleTraffic)} 次/月）。關鍵字「${c.topKeyword}」你排第 ${c.keywordRank} 名，還有往前衝的空間。` :
+      `你是同分類 Google 流量最高的創作者，持續維護 SEO 結構可以進一步拉開差距。`);
+  } else {
+    insight = `你有自架站，走在正確的方向。持續增加 SEO 文章覆蓋更多關鍵字，流量會穩定成長。`;
+  }
+  document.getElementById('res-insight').innerHTML = insight;
+  document.getElementById('result-area').scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+document.getElementById('lookupInput').addEventListener('keydown', e => { if(e.key === 'Enter') doLookup(); });
 function scrollToMarket(){ document.getElementById('marketSection').scrollIntoView({behavior:'smooth'}); }
 
 // ── CATEGORY CARDS ──
@@ -673,7 +922,7 @@ function renderTable(){
     // traffic cell
     let trafficCell='';
     if(c.hasSite&&c.googleTraffic>0){
-      trafficCell=`<div class="t-traffic traffic-real">${fmtNum(c.googleTraffic)}/月</div>`;
+      trafficCell=`<div class="t-traffic traffic-real">${fmtNum(c.googleTraffic)}/月<span style="font-size:10px;color:var(--accent);opacity:.65">（估）</span></div>`;
     } else if(!c.hasSite&&c.trafficLoss>0){
       trafficCell=`<div class="t-traffic traffic-loss">-${fmtNum(c.trafficLoss)}/月<br><span style="font-size:10px;color:var(--ink4)">估算流失</span></div>`;
     } else {
@@ -747,7 +996,7 @@ document.getElementById('insightGrid').innerHTML=`
   <div class="insight-card">
     <div class="insight-num">${fmtNum(topGTraffic)}</div>
     <div class="insight-title">最高 Google 月流量（有網站者）</div>
-    <div class="insight-desc">流量最高的創作者每月從 Google 獲得約 ${fmtNum(topGTraffic)} 次有機搜尋——相當於每天有 ${Math.round(topGTraffic/30)} 個陌生業主主動找上門，完全不靠廣告預算。</div>
+    <div class="insight-desc">流量最高的創作者每月從 Google 估算獲得約 ${fmtNum(topGTraffic)} 次有機搜尋（估算值）——相當於每天有 ${Math.round(topGTraffic/30)} 個陌生業主主動找上門，完全不靠廣告預算。</div>
   </div>`;
 </script>
 </body>
